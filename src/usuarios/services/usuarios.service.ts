@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsuarioEntity } from './../entities/usuarios.entity';
+import { LoginModel } from '../models/login.model';
 
 @Injectable()
 export class UsuariosService {
@@ -14,8 +15,23 @@ export class UsuariosService {
 
     async getUsuarios(): Promise<UsuarioEntity[]> {
         const users = await this.usuariosRepository.find();
-        console.log(users);
         return users;
+    }
+
+    async login(credenciais: LoginModel) {
+        const user = await this.usuariosRepository.findOne({
+            where: {
+                login: credenciais.login,
+                senha: credenciais.senha,
+                ativo: true
+            }
+        })
+        if (user) {
+            user.senha = '';
+        } else {
+            throw Error('Credenciais inválidas');
+        }
+        return user;
     }
 
 }

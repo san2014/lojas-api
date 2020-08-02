@@ -10,7 +10,10 @@ export class UsuarioEntity {
     nome: string;
 
     @Column()
-    email: string;
+    login: string;
+
+    @Column()
+    senha: string;
 
     @Column({default: true})
     ativo: boolean;
